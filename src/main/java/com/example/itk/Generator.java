@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Generator {
-    public Map<String, Double> sortProductsBySumCost(List<Order> orders) {
-        return orders.stream().collect(Collectors.groupingBy(Order::getProduct, Collectors.summingDouble(Order::getCost)))
+    public void sortProductsBySumCost(List<Order> orders) {
+        orders.stream().collect(Collectors.groupingBy(Order::getProduct, Collectors.summingDouble(Order::getCost)))
             .entrySet()
             .stream()
             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -21,5 +21,14 @@ public class Generator {
                 System.out.println("Sum: " + sum);
                 return null;
             }));
+    }
+
+    public Map<String, Double> avgGrades(List<Student> students) {
+        return students.parallelStream()
+            .flatMap(student -> student.getGrades().entrySet().stream())
+            .collect(Collectors.groupingBy(
+                Map.Entry::getKey,
+                Collectors.averagingInt(Map.Entry::getValue)
+            ));
     }
 }
