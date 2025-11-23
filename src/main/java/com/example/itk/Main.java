@@ -1,7 +1,37 @@
 package com.example.itk;
 
+import java.util.concurrent.BrokenBarrierException;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        ComplexTaskExecutor taskExecutor = new ComplexTaskExecutor(5); // Количество задач для выполнения
+
+        Runnable testRunnable = () -> {
+            System.out.println(Thread.currentThread().getName() + " started the test.");
+
+            // Выполнение задач
+            try {
+                taskExecutor.executeTasks(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(Thread.currentThread().getName() + " completed the test.");
+        };
+
+        Thread thread1 = new Thread(testRunnable, "TestThread-1");
+        Thread thread2 = new Thread(testRunnable, "TestThread-2");
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
