@@ -1,4 +1,4 @@
-package com.example.itk;
+package com.example.itk.BlockingQueue;
 
 import java.util.LinkedList;
 import java.util.Queue;
